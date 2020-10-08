@@ -13,6 +13,11 @@ black = (0,0,0)
 white = (255,255,255)
 red = (255,0,0)
 myBlack = (24,24,24)
+blue = (200,0,0)
+green = (0,200,0)
+
+bright_blue = (255,0,0)
+bright_green = (0,255,0)
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('A Bit Racey')
@@ -33,10 +38,14 @@ def game_intro():
                 pygame.quit()
                 quit()
         gameDisplay.fill(white)
-        largeText = pygame.font.Font('freesansbold.ttf',115)
+        largeText = pygame.font.SysFont('comicsansms',115)
         TextSurf , TextRect = text_objects("A Bit Racey",largeText)
         TextRect.center = ((display_width/2),(display_height/2))
         gameDisplay.blit(TextSurf,TextRect)
+        
+        button("Let's Go!",200,450,100,50,green,bright_green,'play')
+        button("Quit",600,450,100,50,blue,bright_blue,'quit')
+        
         pygame.display.update()
         clock.tick(15)
 
@@ -45,7 +54,7 @@ def car(x,y):
     gameDisplay.blit(carImg,(x,y))
 
 def things_dodged(count):
-    font = pygame.font.SysFont(None,25)
+    font = pygame.font.SysFont("comicsansms",25)
     text = font.render("Score: " + str(count),True,black)
     gameDisplay.blit(text,(0,0))
 
@@ -54,11 +63,11 @@ def things(tx,ty,thing_width,thing_height,color):
 
 
 def text_objects(text,font):
-    textSurface = font.render(text,True,red)
+    textSurface = font.render(text,True,myBlack)
     return textSurface , textSurface.get_rect()
 
 def message_display(text):
-    largeText = pygame.font.Font('freesansbold.ttf',115)
+    largeText = pygame.font.SysFont('comicsansms',115)
     TextSurf , TextRect = text_objects(text,largeText)
     TextRect.center = ((display_width/2),(display_height/2))
     gameDisplay.blit(TextSurf,TextRect)
@@ -69,6 +78,31 @@ def message_display(text):
 
 def crash():
     message_display("You Crashed!!")
+
+def button(msg,x,y,w,h,ic,ac,action = None):
+    mouse = pygame.mouse.get_pos()
+
+    click = pygame.mouse.get_pressed()
+    # print(mouse)
+
+    if x+w > mouse[0] > x and y+h > mouse[1] > y:
+        pygame.draw.rect(gameDisplay,ac,(x,y,w,h))
+        if click[0] == 1 and action != None:
+            if action == "play":
+                gameLoop()
+            elif action == 'quit':
+                pygame.quit()
+                quit()
+
+    else:
+        pygame.draw.rect(gameDisplay, ic,(x,y,w,h))
+    
+    smallText = pygame.font.SysFont('comicsansms',20)
+    textSurf,textRect = text_objects(msg, smallText)
+    textRect.center = ( (x+(w/2)), (y+(h/2)) )
+    gameDisplay.blit(textSurf, textRect)
+    
+
 
 def gameLoop():
     x = (display_width * 0.45)
