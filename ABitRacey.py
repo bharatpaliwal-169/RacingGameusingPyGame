@@ -1,8 +1,14 @@
+
 import pygame
 import time
 import random
+
+#________________________GLOBALS_____________________________________
+
 #initailize the game
 pygame.init()
+#Sounds
+crash_sound = pygame.mixer.Sound("crashSound.wav")
 
 #Display SetUp
 display_width = 950
@@ -12,7 +18,7 @@ car_width = 108
 black = (0,0,0)
 white = (255,255,255)
 red = (255,0,0)
-myBlack = (24,24,24)
+myBlack = (35,24,35)
 blue = (200,0,0)
 green = (0,200,0)
 
@@ -27,8 +33,11 @@ clock = pygame.time.Clock()
 
 #item
 carImg = pygame.image.load('car.jpeg')
+# pygame.display.set_icon("carIcon.jpeg")
 pause = False
 
+
+#________________________________________________________________________
 
 #FUNCTIONS
 def game_intro():
@@ -89,21 +98,23 @@ def text_objects(text,font):
     textSurface = font.render(text,True,myBlack)
     return textSurface , textSurface.get_rect()
 
-def message_display(text):
-    largeText = pygame.font.SysFont('comicsansms',115)
-    TextSurf , TextRect = text_objects(text,largeText)
-    TextRect.center = ((display_width/2),(display_height/2))
-    gameDisplay.blit(TextSurf,TextRect)
-    pygame.display.update()
+# def message_display(text):
+#     largeText = pygame.font.SysFont('comicsansms',115)
+#     TextSurf , TextRect = text_objects(text,largeText)
+#     TextRect.center = ((display_width/2),(display_height/2))
+#     gameDisplay.blit(TextSurf,TextRect)
+#     pygame.display.update()
 
-    time.sleep(2)
-    gameLoop()
+#     time.sleep(2)
+#     gameLoop()
 
 def crash():
-    largeText = pygame.font.SysFont("comicsansms",115)
+
+    pygame.mixer.Sound.play(crash_sound) 
+    largeText = pygame.font.SysFont("comicsansms",80)
     TextSurf, TextRect = text_objects("You Crashed!!", largeText)
     TextRect.center = ((display_width/2),(display_height/2))
-    things_dodged(dodged)
+    
     # gameDisplay.blit(TextSurf, TextRect)
     
     while True:
@@ -113,7 +124,7 @@ def crash():
                 pygame.quit()
                 quit()
                 
-        gameDisplay.fill(white)
+        # gameDisplay.fill(white)
         gameDisplay.blit(TextSurf, TextRect)
     
         button("Play Again",200,450,100,50,green,bright_green,'play')
@@ -148,7 +159,7 @@ def button(msg,x,y,w,h,ic,ac,action = None):
     gameDisplay.blit(textSurf, textRect)
     
 
-
+#mainLoop
 def gameLoop():
     x = (display_width * 0.45)
     y = (display_height * 0.67)
@@ -176,9 +187,9 @@ def gameLoop():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    x_change = -15
+                    x_change = -12
                 if event.key == pygame.K_RIGHT:
-                    x_change = 15
+                    x_change = 12
                 if event.key == pygame.K_p:
                     pause = True
                     paused()
@@ -213,11 +224,20 @@ def gameLoop():
                 crash()
 
         pygame.display.update()
-        #FPS 
-        clock.tick(150)          
-#start
+        #FPS
+
+        clock.tick(120)          
+
+#_____________________________GamePlay_________________________________
+
 game_intro()
 gameLoop()
+
 #exit
+
 pygame.quit()
 quit()
+
+
+
+#_____________________________ENDGAME___________________________________
